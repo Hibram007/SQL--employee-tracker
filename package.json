@@ -1,0 +1,30 @@
+{
+  "name": "SQL--employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3",
+    "node.js": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hibram007/SQL--employee-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hibram007/SQL--employee-tracker/issues"
+  },
+  "homepage": "https://github.com/Hibram007/SQL--employee-tracker#readme"
+}
