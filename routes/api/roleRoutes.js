@@ -1,5 +1,7 @@
 // consts
-
+const express = require('express');
+const router = express.Router();
+const etrackerConnection = require('../../db/connection');
 
 //GET routes for - job title - tole ID - department role - salary
 

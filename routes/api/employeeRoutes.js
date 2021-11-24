@@ -1,4 +1,7 @@
 // consts
+const express = require('express');
+const router = express.Router();
+const etrackerConnection = require('../../db/connection');
 
 
 
@@ -9,6 +12,8 @@
 
 // POST route - add an employee with info : first /last name, role , manager
 
+
+// PUT route - update employee role - by: select employee to update ( ID) and add new role
 
 
 // export staement
