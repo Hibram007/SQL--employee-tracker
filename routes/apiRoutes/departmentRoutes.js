@@ -20,7 +20,26 @@ router.get('/department', (req, res) => {
     });
   });
 
-  
 //POST route for : add dept with : name of dept
+// Create a candidate
+router.post('/department', ({ body }, res) => {
+
+  const sql = `INSERT INTO department (name) VALUES (?)`;
+  const params = [
+    body.name,
+  ];
+
+  etrackerConnection.query(sql, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: body
+    });
+  });
+});
 
 // export statement
+module.exports = router;

@@ -25,6 +25,27 @@ router.get('/role', (req, res) => {
 
 
 //POST Route - add a role with : name , salary, dept for role
-
+router.post('/employee', ({ body }, res) => {
+ 
+    const sql = `INSERT INTO employee (role_title, role_salary, department_id ) VALUES (?,?,?)`;
+    const params = [
+      body.role_title,
+      body.role_salary,
+      body.department_id,
+    ];
+  
+    etrackerConnection.query(sql, params, (err, result) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: 'success',
+        data: body
+      });
+    });
+  });
+  
 
 // export statement
+module.exports = router;
