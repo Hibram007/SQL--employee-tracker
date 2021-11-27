@@ -1,11 +1,11 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 const etrackerConnection = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
-	user: DB_USER,
-	password: DB_PW,
-	database: DB_NAME,
+	user: 'root',
+	password: '1998Hlsg8sql',
+	database: 'employeetracker',
 });
 
 module.exports = etrackerConnection;
