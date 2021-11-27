@@ -3,13 +3,14 @@ const express = require('express');
 const router = express.Router();
 const etrackerConnection = require('../../db/connection');
 
+// geting SQL error " role.salary ''[ don"t know if I cna double up like this[]
 
 
 // GET routes view - employee data - employee ids - first name - last name job titles - depts - salaries - managers
-//SELECTING  employee table ( full) and refernecing role table for title and salary
+//SELECTING  employee table ( full) and referencing role table for title and salary
 router.get('/employee', (req, res) => {
     const sql = `SELECT employee.*, 
-    role.title AS role_title
+    role.title AS role_title,
     role.salary AS role_salary
     FROM employee
     LEFT JOIN role ON employee.role_id = role.id`;

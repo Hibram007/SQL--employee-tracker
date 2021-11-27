@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const etrackerConnection = require('./db/connection');
-// const apiRoutes = require('./routes/apiRoutes');
+const apiRoutes = require('./routes/apiRoutes');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -11,8 +11,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-// Use apiRoutes
-// app.use('/api', apiRoutes);
+//Use apiRoutes
+app.use('/api', apiRoutes);
 
 //Default response for any other request (Not Found)
 app.use((req, res) => {
