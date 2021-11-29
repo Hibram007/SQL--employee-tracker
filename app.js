@@ -1,17 +1,11 @@
 var inquirer = require('inquirer');
-const { removeListener } = require('./db/connection');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
+const mysql = require("mysql")
+const cTable = require('console.table');
 
-// const pageHTML = generatePage(name, github);
+//Main Menu prompt- 1st Prompt
 
-// fs.writeFile('./index.html', pageHTML, err => {
-//   if (err) throw err;
-
-//   console.log('Portfolio complete! Check out index.html to see the output!');
-// });
-const promptUser = () => {
-    return inquirer.prompt([
+function promptUser() {
+ inquirer.prompt([
     /* Pass your questions in here */
     {
         type: 'input',
@@ -20,7 +14,7 @@ const promptUser = () => {
     },
     {
         type: 'list',
-        name: 'start prompt',
+        name: 'start prompt choices',
         message: 'What do you want to do?',
         choices: [
             "view all departments",
@@ -34,8 +28,40 @@ const promptUser = () => {
             "update an employee role"
         ],
       }
-]);
-};
+]).then(function(val) {
+    
+    switch (val.choice) {
+        case "View All Employees?":
+          viewAllEmployees();
+        break;
+
+      case "View All Employee's By Roles?":
+          viewAllRoles();
+        break;
+      case "View all Emplyees By Deparments":
+          viewAllDepartments();
+        break;
+      
+      case "Add Employee?":
+            addEmployee();
+          break;
+
+      case "Update Employee":
+            updateEmployee();
+          break;
+  
+        case "Add Role?":
+            addRole();
+          break;
+  
+        case "Add Department?":
+            addDepartment();
+          break;
+
+        }
+})
+}
+
 
 // write code to link each of the prompts with the back end get/post/update routes
 promptUser().then(answers => console.log(answers));
