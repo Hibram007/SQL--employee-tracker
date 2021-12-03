@@ -1,4 +1,4 @@
-// consts to import all the file paths for all the routes 
+//consts to import all the file paths for all the routes 
 const express = require('express');
 const router = express.Router();
 

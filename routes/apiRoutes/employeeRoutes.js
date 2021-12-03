@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const etrackerConnection = require('../../db/connection');
 
-// geting SQL error " role.salary ''[ don"t know if I cna double up like this[]
 
 
 // GET routes view - employee data - employee ids - first name - last name job titles - depts - salaries - managers
