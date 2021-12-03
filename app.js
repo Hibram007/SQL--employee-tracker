@@ -1,88 +1,194 @@
-var inquirer = require('inquirer');
-const mysql = require("mysql")
-const cTable = require('console.table');
-const etrackerConnection = require('./db/connection');
 
-//Main Menu prompt- 1st Prompt
+const mysql = require("mysql2");
+const inquirer = require("inquirer");
+const consoleTable = require("console.table");
 
-function promptUser() {
- inquirer.prompt([
-    /* Pass your questions in here */
-    {
-        type: 'input',
-        name: 'name',
-        message: 'What is your name?'
-    },
-    {
-        type: 'list',
-        name: 'start prompt choices',
-        message: 'What do you want to do?',
-        choices: [
-            "view all departments",
-            "view all roles",
-            "view all employees",
-            //Add questions
-           "add a department",
-            "add a role",
-            "add an employee",
-            //update question
-            "update an employee role"
-        ],
-      }
-]).then(function(val) {
-    
-    switch (val.choice) {
-        case "View All Employees?":
-          viewAllEmployees();
-        break;
+//Db connection - Moved from db folder to consolidate
+const etrackerConnection = mysql.createConnection({
+	host: "localhost",
+	port: 3306,
+	user: 'root',
+	password: '1998Hlsg8sql',
+	database: 'employeetracker',
+});
 
-      case "View All Employees By Role?":
-          viewAllRoles();
-        break;
-      case "View all Employees By Department":
-          viewAllDepartments();
-        break;
-      
-      case "Add An Employee":
-            addEmployee();
-          break;
+etrackerConnection.connect(function(err) {
+  if (err) throw err;
+  start();
+});
 
-      case "Update An Employee":
-            updateEmployee();
-          break;
-  
-        case "Add A Role":
-            addRole();
-          break;
-  
-        case "Add A Department":
-            addDepartment();
-          break;
-        }
-})
-}
-
-//View all employees route
-function viewAllEmployees() {
-    etrackerConnection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
-    function(err, res) {
-      if (err) throw err
-      console.table(res)
-      startPrompt()
-  })
-}
-
-//View all Roles
-function viewAllRoles() {
-    etrackerConnection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
-    function(err, res) {
-    if (err) throw err
-    console.table(res)
-    startPrompt()
+// User prompts wrapped in a fucntion to call it at end- See M.12
+function start() {
+  inquirer
+    .prompt({
+      type: "list",
+      name: "option",
+      message: "What would you like to do?",
+      choices: [
+        "Add Department",
+        "Add Role",
+        "Add Employee",
+        "View Department",
+        "View Role",
+        "View Employee",
+        "Update Employee Role"
+      ]
     })
-  }
 
-  // 
+    .then(function(result) {
+      console.log("You entered: " + result.option);
+      switch (result.option) {
+        case "Add Department":
+          addDepartment();
+          break;
+        case "Add Role":
+          addRole();
+          break;
+        case "Add Employee":
+          addEmployee();
+          break;
+        case "View Department":
+          viewDepartment();
+          break;
+        case "View Role":
+          viewRole();
+          break;
+        case "View Employee":
+          viewEmployee();
+          break;
+        case "Update Employee Role":
+          updateRole();
+          break;
+      }
+    });
+}
 
-// write code to link each of the prompts with the back end get/post/update routes
-promptUser().then(answers => console.log(answers));
+function addDepartment() {
+  inquirer
+    .prompt({
+      type: "input",
+      message: "Type in the department name you want to add",
+      name: "department"
+    })
+    .then(function(res) {
+      const department = res.department;
+      const query = `INSERT INTO department (name) VALUES("${department}")`;
+      etrackerConnection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+      });
+    });
+}
+
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Type in the job title you want to add",
+        name: "title"
+      },
+      {
+        type: "input",
+        message: "Type in the salary for this position",
+        name: "salary"
+      },
+      {
+        type: "input",
+        message: "Add the department ID for this position",
+        name: "departmentID"
+      }
+    ])
+    .then(function(res) {
+      const title = res.title;
+      const salary = res.salary;
+      const departmentID = res.departmentID;
+      const query = `INSERT INTO role (title, salary, department_id) VALUE("${title}", "${salary}", "${departmentID}")`;
+      etrackerConnection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+      });
+    });
+}
+
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Employee first name?",
+        name: "firstName"
+      },
+      {
+        type: "input",
+        message: "Employee last name?",
+        name: "lastName"
+      },
+      {
+        type: "input",
+        message: "Employee's role ID?",
+        name: "roleID"
+      },
+      {
+        type: "input",
+        message: "Employee's manager ID?",
+        name: "managerID"
+      }
+    ])
+    .then(function(res) {
+      const firstName = res.firstName;
+      const lastName = res.lastName;
+      const roleID = res.roleID;
+      const managerID = res.managerID;
+      const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUE("${firstName}", "${lastName}", "${roleID}", "${managerID}")`;
+     etrackerConnection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+      });
+    });
+}
+
+function viewDepartment() {
+  const query = "SELECT * FROM department";
+ etrackerConnection.query(query, function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    start();
+  });
+}
+
+function viewRole() {
+  const query = "SELECT * FROM role";
+  etrackerConnection.query(query, function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    start();
+  });
+}
+
+function viewEmployee() {
+  const query = "SELECT * FROM employee";
+  etrackerConnection.query(query, function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    start();
+  });
+}
+
+function updateRole() {
+  const query = "SELECT id, first_name, last_name, role_id  FROM employee";
+  etrackerConnection.query(query, function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    {
+      inquirer.prompt({
+        type: "input",
+        message: "What employee needs to be updated? (Use employee id column to select employee)",
+        name: "employee"
+      });
+    }
+  });
+}
